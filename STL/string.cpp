@@ -1,6 +1,25 @@
 #include <iostream>
 #include <string>
+#include <ctime>
 using namespace std;
+
+// 1.4个默认成员函数
+void test_string1()
+{
+	string s1;
+	string s2("hello");
+	string s3("hello", 2);
+	string s4(s2);
+	string s5(s2, 1, 8);
+	string s6(s2, 1, string::npos);
+	cout << s1 << endl;
+	cout << s2 << endl;
+	cout << s3 << endl;
+	cout << s4 << endl;
+	cout << s5 << endl;
+	cout << s6 << endl;
+
+}
 
 // 2. 遍历string
 void test_string2()
@@ -142,11 +161,62 @@ void test_string5()
 #endif
 }
 
+// c_str() : 将string对象转换为c字符串
+void test_string6()
+{
+	string s = "hello world";
+	cout << s << endl;
+	cout << s.c_str() << endl;
+
+	s += '\0';
+	s += "linux";
+	cout << s << endl;			// 调用的是string重载的operator
+	cout << s.c_str() << endl;	// 转换为C类型的字符串，输出遇到'\0'就停止
+
+	// 有些字符输出是不可见的
+	for (unsigned char ch = 0; ch < 255; ch++) {
+		cout << ch << " ";
+
+	}
+	cout << endl;
+}
+// string类对象的修改操作
+void test_string7()
+{
+
+	string str;
+	// 插入操作
+	str.push_back(' ');
+	str.append("hello ");	//在str后追加字符串
+	str += 'y';				// += 既可以加字符，也可加字符串
+	str += "ang";
+	cout << str << endl;
+	cout << str.c_str() << endl;
+
+	// 查找操作
+	string file("string.cpp.zip");
+	// 获取文件后缀名
+	//size_t pos = file.find('.');
+	size_t pos = file.rfind('.');
+	// 截取子字符串
+	string suffix(file.substr(pos));	// 默认截取到最后
+	cout << suffix << endl;
+	suffix = file.substr(pos, file.size() - pos);
+	cout << suffix << endl;
+	
+	// npos是string里面的一个静态成员变量
+	// static const size_t npos = -1;
+
+}
+
 int main()
 {
+	//test_string1();
 	//test_string2();
 	//test_string3();
 	//test_string4();
-	test_string5();
+	//test_string5();
+	//test_string6();
+	test_string7();
 	return 0;
 }
