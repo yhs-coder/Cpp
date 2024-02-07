@@ -3,7 +3,7 @@ namespace yang
 {
 	class string
 	{
-	public: 
+	public:
 		typedef char* iterator;
 	public:
 		string(const char* str = "")
@@ -25,7 +25,7 @@ namespace yang
 
 		~string() {
 			if (_str) {
-				delete[] _str; 
+				delete[] _str;
 				_str = nullptr;
 				_size = _capacity = 0;
 				std::cout << "~string" << std::endl;
@@ -119,7 +119,7 @@ namespace yang
 
 		/***************************************************************************/
 		// 修改操作
-		
+
 		void push_back(char ch) {
 			// 空间满了进行增容
 			if (_size == _capacity) {
@@ -200,17 +200,71 @@ namespace yang
 			_str[_size] = '\0';
 		}
 		void erase(size_t pos, size_t len = npos) {
+			assert(pos < _size);
+			if (len >= _size - pos) {
+				_str[pos] = '\0';
+				_size = pos;
+			}
+			else {
+				size_t i = pos + len;
+				while (i <= _size) {
+					_str[i - len] = _str[i];
+					i++;
+				}
+				_size -= len;
+			}
+		}
+
+		size_t find(char ch, size_t pos = 0) {
+			for (size_t i = pos; i < _size; i++) {
+				if (_str[i] == ch) {
+					return i;
+				}
+			}
+			return npos;
+		}
+		size_t find(const char* str, size_t pos = 0) {
+			const char* tmp = strstr(_str + pos, str);
+			if (tmp == nullptr) {
+				return npos;
+			}
+			return tmp - _str;
+		}
+
+		// 反方向查找第一个匹配的字符
+		size_t rfind(char ch, size_t pos = npos) {
+			string tmp(*this);
+			std::reverse(tmp.begin(),tmp.end());	// 逆置字符串
+			// pos位和镜像位置pos'相加等于_size - 1,即 pos + pos' = _size - 1;
+			if (pos > _size) {
+				pos = _size - 1;
+			}
+			pos = _size - 1 - pos;
+			size_t ret = tmp.find(ch, pos);
+			if (ret != npos) {
+				return _size - 1 - ret;
+			}
+			else {
+				return npos;
+			}
+
+
 
 		}
 
-		size_t find(char ch, size_t pos = 0) {}
-		size_t find(const char* str, size_t pos = 0);
+		size_t rfind(const char* str, size_t pos = npos) {
+
+		}
+
 		bool operator < (const string& s);
 		bool operator == (const string& s);
 		bool operator <= (const string& s);
 		bool operator > (const string& s);
 		bool operator >= (const string& s);
 		bool operator != (const string& s);
+	private:
+		friend std::ostream& operator << (std::ostream* out, const yang::string& s);
+		friend std::istream& operator >> (std::istream* in, const yang::string& s);
 
 	private:
 		char*	_str;			// 存储字符的数组
@@ -220,4 +274,12 @@ namespace yang
 	};
 
 	const size_t string::npos = -1;
+
+	std::ostream& operator << (std::ostream& out, const yang::string& s) {
+		for (size_t i = 0; i < s.size(); i++) {
+			out << s[i];
+		}
+		return out;
+	}
+
 };
