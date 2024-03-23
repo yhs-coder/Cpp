@@ -99,7 +99,51 @@ namespace yang
 			_head->prev = _head;
 		}
 
-		~list()
+		list(const list<T>& lt)
+		{
+			_head = new Node;
+			_head->prev = _head;
+			_head->next = _head;
+			/*list<T>::const_iterator it = lt.begin();
+			while (it != lt.end())
+			{
+				push_back(*it);
+				++it;
+			}*/
+
+			// 更简洁的方法
+			for (auto e : lt)
+			{
+				push_back(e);
+			}
+		}
+
+		// lt1 = lt2
+		/*list<T>& operator = (const list<T>& lt)
+		{
+			// 防止自赋值
+			if (this != &lt)
+			{
+				// 思路：先清空原链表的数据,再输入lt链表的数据
+				clear();
+				for (auto e : lt)
+				{
+					push_back(e);
+				}
+
+				// 下面这种效率低，还有额外再调用拷贝构造、析构，多了两个函数栈帧
+				//list<T> tmp(lt);
+				//::swap(_head, tmp._head);
+			}
+			return *this;
+		}*/
+
+		list<T>& operator = (list<T> lt)
+		{
+			swap(_head, lt._head);
+			return *this;
+		}
+ 		~list()
 		{
 			clear();
 			delete _head;	// 释放头节点
@@ -270,5 +314,25 @@ namespace yang
 		lt.clear();
 		lt.push_back(100);
 		print_list(lt);
+	}
+
+	void test_list4()
+	{
+		list<int> lt1;
+		lt1.push_back(1);
+		lt1.push_back(2);
+		lt1.push_back(3);
+		lt1.push_back(4);
+
+		list<int> lt2(lt1);
+		print_list(lt2);
+
+		list<int> lt3;
+		lt3.push_back(10);
+		lt3.push_back(20);
+		lt3.push_back(30);
+		lt3.push_back(40);
+		lt1 = lt3;
+		print_list(lt1);
 	}
 }
