@@ -204,6 +204,7 @@ int main()
 	// 测试模拟实现的list
 	//yang::test_list1();
 	//yang::test_list2();
-	yang::test_list3();
+	//yang::test_list3();
+	yang::test_list4();
 	return 0;
 }
